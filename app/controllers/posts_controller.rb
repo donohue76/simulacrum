@@ -13,11 +13,12 @@ class PostsController < ApplicationController
   end
 
   def create
-    if @post = Post.create(post_params)
+    @post = Post.create(post_params)
+    if @post.save
       flash[:success] = "Your post has been created!"
-      redirect_to posts_path
+      redirect_to @post
     else
-      flash.now[:alert] = "Your new post couldn't be created!  Please check the form."
+      flash.now[:alert] = "Your post couldn't be created! Please add an image and try again."
       render :new
     end
   end
@@ -39,9 +40,10 @@ class PostsController < ApplicationController
     if @post.destroy
       flash[:success] = "Your post was successfully deleted."
       redirect_to root_path
-  else 
-  	  flash[:alert] = "Oh god something is wrong, please try again"
-  	  redirect_to posts_path
+    else 
+      flash[:alert] = "Oh god, something is wrong, please try again"
+      redirect_to posts_path
+    end
   end
 
   private
@@ -53,4 +55,5 @@ class PostsController < ApplicationController
   def set_post
     @post = Post.find(params[:id])
   end
+
 end
