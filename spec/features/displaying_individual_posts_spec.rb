@@ -6,7 +6,7 @@ feature 'Can view individual posts' do
 
   	visit '/'
   	print(post.id)
-    find(:xpath, '//a[contains(@href, "posts/#{posts.id}")]').click
+    find(:xpath, "//a[contains(@href, 'posts/#{post.id}')]").click
     expect(page.current_path).to eq(post_path(post))
   end
 end
