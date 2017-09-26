@@ -2,7 +2,6 @@ class Post < ApplicationRecord
 	validates :user_id, presence: true
 
 	belongs_to :user
-	has_many :posts, dependent: :destroy
 
 	validates :image, presence: true
 
