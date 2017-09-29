@@ -1,20 +1,21 @@
 require 'rails_helper'
 
-feature 'Deleting posts' do 
-	before do
-		post = create(:post, caption: 'ABs for days.')
+feature 'deleting posts' do
+  before do
+  	user = create(:user)
+    post = create(:post, user_id = user.id, caption: 'I am going to delete this post.')
 
-		visit '/'
+    visit '/'
+    sign_in_with_user
 
-		find(:xpath, "//a[contains(@href, 'posts/#{post.id}')]").click
-		click_link 'Edit Post'
-	end
+    find(:xpath, "//a[contains(@href,'posts/#{post.id}')]").click
+    click_link 'Edit Post'
+  end
 
-	scenario 'Can delete a single post' do
-		click_link 'Delete Post'
+  scenario 'can delete a post' do
+    click_link 'Delete Post'
 
-		expect(page).to have_content('Your post was successfully deleted.')
-		expect(page).to_not have_content('Abs for days.')
-	end
-
+    expect(page).to have_content('Problem solved! Post deleted.')
+    expect(page).to_not have_content('I am going to delete this post.')
+  end
 end
