@@ -1,26 +1,47 @@
 require 'rails_helper'
 
-feature 'Editing posts' do
-	before do
-		post = create(:post)
-		visit '/'
-		print(post.id)
-		find(:xpath, "//a[contains(@href, 'posts/#{post.id}')]").click
-		click_link 'Edit Post'
-	end
+feature 'editing posts' do
+  background do
+    user = create :user
+    user_two = create(:user, email: 'hi@hi.com',
+                             user_name: 'BennyBoy',
+                             id: user.id + 1)
+    post = create(:post, user_id: user.id)
+    post_two = create(:post, user_id: user.id + 1)
 
-	scenario 'Can edit a post' do
-		fill_in 'Caption', with: "Oh god, you weren't meant to see this picture!"
-		click_button 'Update Post'
+    sign_in_with user
+    visit '/'
+  end
 
-		expect(page).to have_content("Post updated.")
-		expect(page).to have_content("Oh god, you weren't meant to see this picture!")
-	end
+  scenario 'can edit a post as the owner' do
+    find(:xpath, "//a[contains(@href,'posts/#{post.id}')]").click
+    expect(page).to have_content('Edit Post')
 
-	it "wont't update a post without an image" do
-		attach_file('Image', 'spec/files/images/image.txt')
-		click_button 'Update Post'
+    click_link 'Edit Post'
+    fill_in 'Caption', with: "Oh god, you weren't meant to see this picture!"
+    click_button 'Update Post'
 
-		expect(page).to have_content("Update failed.  Please check the form.")
-	end
+    expect(page).to have_content('Post updated.')
+    expect(page).to have_content("Oh god, you weren't meant to see this picture!")
+  end
+
+  scenario "cannot edit a post that doesn't belong to you via the show page" do
+    find(:xpath, "//a[contains(@href,'posts/#{post.id}')]").click
+    expect(page).to_not have_content('Edit Post')
+  end
+
+  scenario "cannot edit a post that doesn't belong to you via url path" do
+    visit "/posts/2/edit"
+    expect(page.current_path).to eq root_path
+    expect(page).to have_content("That post doesn't belong to you!")
+  end
+
+  scenario "a post won't update without an attached image" do
+    find(:xpath, "//a[contains(@href,'posts/#{post.id}')]").click
+    click_link 'Edit Post'
+    attach_file('Image', 'spec/files/coffee.zip')
+    click_button 'Update Post'
+
+    expect(page).to have_content('Something is wrong with your form!')
+  end
 end
