@@ -14,10 +14,14 @@
           .user-name
             = post.user.user_name
           = post.caption
+          / added #{post.id} in multiple locations in order to identify the specific post we're referring to in our jQuery
         .comments{id: "comments_#{post.id}"}
+          / will only reveal the 'view all posts' link if there are greater than 4 comments for that specific post.
           - if post.comments.any?
             .paginator{id: "#comments-paginator-#{post.id}"}
               - unless post.comments.count <= 4
+                / giving the link_to helper method an HTML5 data attribute of data-post-id that is set to the id of the post for the sake of our jQuery too
+                / specifying that we want HTML to be retruend in the data attributes hash.
                 = link_to "view all #{post.comments.count} comments", post_comments_path(post), remote: true, class: 'more-comments', data: {post_id: "#{post.id}", type: "html"}
             = render post.comments.last(4), post: post
     .comment-like-form.row

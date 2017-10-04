@@ -1,1 +1,2 @@
+/ rendering each of the @comments via our existing _comment.html.haml partial from. views/comments, passing it the @post instance variable from our index action for the sake of the attached delete feature. More simply, we render the _comment.html.haml partial for each comment.
 = render @comments, post: @post

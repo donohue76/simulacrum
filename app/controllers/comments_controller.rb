@@ -1,9 +1,9 @@
 class CommentsController < ApplicationController
   before_action :set_post
-  
+  # returning all of the comments for a post in ascending order
   def index
     @comments = @post.comments.order("created_at ASC")
-
+    # responding to html(as the default) and requesting that the applications layout view is only rendered as part of this request, IF the request isn't made with AJAX.
     respond_to do |format|
       format.html { render layout: !request.xhr? }
     end

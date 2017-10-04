@@ -1,36 +1,14 @@
-var Append = {};
-Append.open = false;
-function ClickableCommentsLink(){
-  $('.more-comments').click( function() {
-    $(this).on('ajax:success', function(event, data, status,xhr) {
-      event.preventDefault();
-      var postId = $(this).data("post-id");
-      $("#comments_" + postId).html(data);
-      $("#comments-paginator-" + postId).html("<a id='more-comments' data-post-id=" + postId + "data-type='html' data-remote='true' href='/posts/" + postId + "/comments>show morecomments</a>");
-      Append.open = true;
-      Append.comment = true; 
-      Append.link = false;  
-    }); 
-  });
-}
-
-function DestroyComments(){
-  $('.delete-comment').click( function() {
-    Append.id = this;
-    Append.post_id = $(this).data("post-id");
-    Append.comment_count = $(this).data("value");
-  }); 
-}
-
+// wait for the document to be ready before running the code
 $( document ).ready(function() {
-  ClickableCommentsLink();
-  DestroyComments();
-  $('.comment_content').click (function(){
-  	Append.id = this;
-  	Append.post_id = $(this).data("post-id");
-  	if (Append.comment_count == undefined){ Append.comment_count = $(this).data("value"); }
-  	if(Append.comment_count < 4){ Append.comment = true; Append.link = false; } 
-  	else if(Append.comment_count == 4){ Append.comment = false; Append.link = true; } 
-  	else if(Append.comment_count > 4){ Append.comment = false; Append.link = false;  } 
-  })
+  // Listen for a click on the .more-comments class (each of the 'view all x comments' links)
+  $('.more-comments').click( function() {
+    // Once the AJax call has been successfull, move on to the next lines
+    $(this).on('ajax:success', function(event) {
+      // Assign a postId variable based on the contents of the data-post-id html attribute (which we assigned in our post partial)
+      var postId = $(this).data("post-id");
+      // replace the #comments_ + postOd div with the contents of the returned AJAX data
+      $("#comments_" + postId).html(event.detail[2].responseText);
+      $("#comments-paginator-" + postId).html("<a id='more-comments' data-post-id=" + postId + "data-type='html' data-remote='true' href='/posts/" + postId + "/comments>show more comments</a>");
+    });
+  });
 });

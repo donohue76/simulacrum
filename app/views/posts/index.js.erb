@@ -1,3 +1,6 @@
+// Append the #posts div with the new _posts.html.haml partial (add it on the bottom)
 $('#posts').append("<%= escape_javascript(render 'posts')%>");
+// Select the #paginator div and set its contents to the link_to_next_page kaminari helper method. This will refresh our link, continuously taking us to the next page as we keep clicking, rather than constantly giving us a link for page 2 and will also reset its position
 $('#paginator').html("<%= escape_javascript(link_to_next_page(@posts, 'LOAD MORE', remote: true, id: 'load_more'))%>");
+// Remove the #paginator div if the #load_more element (our link) doesn't exist.
 if (!$('#load_more').length) { $('#paginator').remove(); }
