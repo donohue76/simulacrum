@@ -49,6 +49,9 @@ class PostsController < ApplicationController
     end
   end
 
+  def like
+  end
+
   private
 
   def post_params
