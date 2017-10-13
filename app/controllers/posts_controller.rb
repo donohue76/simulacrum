@@ -1,7 +1,6 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!
-  before_action :owned_profile, only: [:edit, :update]
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_post, only: [:show, :edit, :update, :destroy, :like]
   before_action :owned_post, only: [:edit, :update, :destroy]
 
   def index
@@ -17,6 +16,7 @@ class PostsController < ApplicationController
 
   def create
     @post = current_user.posts.build(post_params)
+
     if @post.save
       flash[:success] = "Your post has been created!"
       redirect_to posts_path
@@ -24,6 +24,10 @@ class PostsController < ApplicationController
       flash.now[:alert] = "Your post couldn't be created! Please add an image and try again."
       render :new
     end
+  end
+
+
+  def edit
   end
 
   def update
@@ -36,9 +40,6 @@ class PostsController < ApplicationController
     end
   end
 
-  def edit
-  end
-
   def destroy
     if @post.destroy
       flash[:success] = "Your post was successfully deleted."
@@ -46,6 +47,17 @@ class PostsController < ApplicationController
     else 
       flash[:alert] = "Oh god, something is wrong, please try again"
       redirect_to posts_path
+    end
+  end
+
+  def like
+    # uses the acts_as_votable gem to cast a vote for a specific post.
+    if @post.liked_by current_user
+      # when a vote is cast we respond with either javascript or html
+      respond_to do |format|
+        format.html { redirect_to :back }
+        format.js
+      end
     end
   end
 
@@ -60,10 +72,9 @@ class PostsController < ApplicationController
   end
 
   def owned_post
-  unless @post.user.id == current_user.id
-    flash[:alert] = "That post doesn't belong to you!"
-    redirect_to root_path
+    unless current_user == @post.user
+      flash[:alert] = "That post doesn't belong to you!"
+      redirect_to 
+    end
   end
-end
-
 end
