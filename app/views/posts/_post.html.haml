@@ -25,10 +25,11 @@
               .paginator{id: "#comments-paginator-#{post.id}"}
                 =link_to "view all #{post.comments.count} comments", post_comments_path(post), remote: true, class: 'more-comments', id: "more_comments_#{post.id}", data: {post_id: "#{post.id}", type: "html", value: "#{post.comments.count}"}
     .comment-like-form.row
-      .col-sm-1
+      .col-sm-1.like-button
         / added a post-specific id to each comment area and moved the heart icon to the link_to helper.
         / added remote: true property to enable AJAX magic
-        =link_to '', like_post_path(post.id), remote: true, id: "like_#{post.id}", class: "glyphicon glyphicon-heart-empty"
+        / the liked_post helper method will determine whether we've liked a post and will then return the appropriate class
+        =link_to '', like_post_path(post.id), remote: true, id: "like_#{post.id}", class: "like glyphicon #{liked_post post}"
       .comment-form.col-sm-11
         = form_for([post, post.comments.build], remote: true) do |f|
           =f.text_field :content, placeholder: 'Add a comment...', class: "comment_content", id: "comment_content_#{post.id}", data: { post_id: "#{post.id}", value: "#{post.comments.count}" }

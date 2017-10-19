@@ -1,2 +1,4 @@
-.likes
-  = likers_of post
+/ Gives us a very specific location for javascript to do its thing.
+/ Each post.id is unique, this ensures jQuery will always be looking at the right post when it updates
+.likes{id: 'likes_#{post.id}'}
+  = display_likes post
