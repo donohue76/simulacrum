@@ -1,4 +1,8 @@
-// finds the specific post that has been liked by its uniquw ID, removes the emnpty heart glyphicon anbd replaces it with the filled in version.
+// finds the specific post that has been liked by its unique ID, removes the empty heart glyphicon annd replaces it with filled in version
 $("#like_<%= @post.id %>").removeClass('glyphicon-heart-empty').addClass('glyphicon-heart');
+
+// finds the specific post that was liked and unlikes it (replaces the filled heart glyphicon with the empty version)
+$("#like_<%= @post.id %>").removeAttr('href').attr('href', '/posts/<%= @post.id %>/unlike');
+
 // finds the appropriate post 'likes' id element, changes the html of that element to the rendered _likes.html.haml partial with the new information it will have from our AJAX call.
 $("#likes_<%= @post.id %>").html("<%= j (render partial: 'posts/likes', locals: { post: @post} ) %>");

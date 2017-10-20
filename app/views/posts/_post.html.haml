@@ -7,7 +7,7 @@
       .time_ago
         =time_ago_in_words(post.created_at)
     .image.center-block
-      =link_to (image_tag post.image.url(:medium), class:'img-responsive'), post_path(post)
+      = link_to (image_tag post.image.url(:medium), class:'img-responsive center-block'), post_path(post)
     .post-bottom
       / adjusting this line to render the posts/likes partial and passing the partial view some context for what the post is
       = render 'posts/likes', post: post
@@ -17,10 +17,10 @@
             =link_to post.user.user_name, profile_path(post.user.user_name)
           / added #{post.id} in multiple locations in order to identify the specific post we're referring to in our jQuery
           =post.caption
-        .comments{id: "comments_#{post.id}"}
+        .comments{:id => "comments_#{post.id}"}
           / will only reveal the 'view all posts' link if there are greater than 4 comments for that specific post.
           - if post.comments.any?
-            = render post.comments.first(4), post: post
+            = render post.comments.last(4), post: post
             - unless post.comments.count <= 4
               .paginator{id: "#comments-paginator-#{post.id}"}
                 =link_to "view all #{post.comments.count} comments", post_comments_path(post), remote: true, class: 'more-comments', id: "more_comments_#{post.id}", data: {post_id: "#{post.id}", type: "html", value: "#{post.comments.count}"}
@@ -33,4 +33,4 @@
       .comment-form.col-sm-11
         = form_for([post, post.comments.build], remote: true) do |f|
           =f.text_field :content, placeholder: 'Add a comment...', class: "comment_content", id: "comment_content_#{post.id}", data: { post_id: "#{post.id}", value: "#{post.comments.count}" }
-          =f.submit 'New Comment', class: 'comment-submit-button' # Hidden with CSS
+          =f.submit 'Submit', class: 'button comment-submit-button' # Hidden with CSS
