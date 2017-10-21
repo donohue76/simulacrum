@@ -5,4 +5,4 @@ $("#like_<%= @post.id %>").removeClass('glyphicon-heart-empty').addClass('glyphi
 $("#like_<%= @post.id %>").removeAttr('href').attr('href', '/posts/<%= @post.id %>/unlike');
 
 // finds the appropriate post 'likes' id element, changes the html of that element to the rendered _likes.html.haml partial with the new information it will have from our AJAX call.
-$("#likes_<%= @post.id %>").html("<%= j (render partial: 'posts/likes', locals: { post: @post} ) %>");
+$("#likes_<%= @post.id %>").html("<%=j (render partial: 'posts/likes', locals: { post: @post} ) %>");
